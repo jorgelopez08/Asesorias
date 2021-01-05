@@ -24,7 +24,6 @@
 #define MOSTRAR_INGRESO 4
 #define MOSTRAR_GASTOS 5
 #define CALCULO_IMPUESTOS 6
-#define GUARDAR_ARCHIVO 7
 #define SALIR 8
 #define TOTAL_MESES 12
 //Variables de uso interno del programa
@@ -38,7 +37,6 @@ float vectorMontos[3][2];
 //Variables de programa modificables por el usuario
 float ingresos[TOTAL_MESES]={},gastos[TOTAL_MESES]={};
 
-void guardarEnArchivo();
 void pausar();
 int menuPrincipal();
 void mesDeCaptura();
@@ -78,9 +76,6 @@ int main()
         case CALCULO_IMPUESTOS:
             mostrarImpuestos();
             break;
-        case GUARDAR_ARCHIVO:
-            guardarEnArchivo();
-            break;
         case SALIR:
             repetir=0;
             break;
@@ -94,44 +89,6 @@ int main()
         }
     } while (repetir);
     return 0;
-}
-void guardarEnArchivo()
-{
-    //Variables de uso interno del programa
-    int porcentajeIsr;
-    FILE* texto;
-    time_t tiempo = time(0);
-    struct tm *tlocal = localtime(&tiempo);
-    char nombreArchivo[128];
-    strftime(nombreArchivo,128,"ReporteImpuestos_%Y_%m_%d_%H_%M_%S.txt",tlocal);
-    texto = fopen((nombreArchivo),"a+");
-    //Variables de uso interno del programa
-    porcentajeIsr=calculoIsr();
-    calcularImpuestos();
-    fprintf(texto,"CALCULO DE IMPUESTOS\n\n");
-    fprintf(texto,"***Tabla Recibo de Honorarios***\n");
-    fprintf(texto,"Ingresos \t\t %10.2f\n", ingresoTotal);
-    fprintf(texto,"(+) IVA \t\t %10.2f\n",manejoIva);
-    fprintf(texto,"(=) Subtotal \t\t %10.2f\n", subtotal);
-    fprintf(texto,"(-) Retenci%cn ISR \t %10.2f\n",162, retencionIsr);
-    fprintf(texto,"(-) Retenci%cn IVA \t %10.2f\n",162, retencionIva);
-    fprintf(texto,"(=) Total\t\t %10.2f\n", total);
-    fprintf(texto,"***Tabla ganancias***\n");
-    fprintf(texto,"Ingresos \t\t %10.2f\n", ingresoTotal);
-    fprintf(texto,"(-) Gastos \t\t %10.2f\n", gastoTotal);
-    fprintf(texto,"(=) Ganancia bruta \t %10.2f\n", gananciaBruta);
-    fprintf(texto,"(-) ISR(%d%%) \t\t %10.2f\n",porcentajeIsr);
-    fprintf(texto,"(=) Ganancia neta \t %10.2f\n", gananciaNeta);
-    fprintf(texto,"***Tabla ISR***\n");
-    fprintf(texto,"ISR(%d%%) \t\t %10.2f\n",porcentajeIsr);
-    fprintf(texto,"(-) ISR retenido \t %10.2f\n",retencionIsr);
-    fprintf(texto,"(=) ISR a Pagar \t %10.2f\n",isrPagar);
-    fprintf(texto,"***Tabla IVA***\n");
-    fprintf(texto,"IVA \t\t\t %10.2f\n", manejoIva);
-    fprintf(texto,"(-) Gastos IVA \t\t %10.2f\n", gastoIva);
-    fprintf(texto,"(-) Retenci%cn IVA \t %10.2f\n",162,retencionIva);
-    fprintf(texto,"(=) IVA  a Pagar \t %10.2f\n",ivaPagar);
-    fclose(texto);
 }
 void pausar()
 {
